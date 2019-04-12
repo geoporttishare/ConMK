@@ -1,0 +1,10 @@
+
+raster stack r consists of serieses x_1,...,x_N, N pixels
+
+write i~j for queen-adjacent neighbours j of i, including i
+
+
+# Todo:
+* prewithen -> rasterstack [x]
+* Var(x_i) for all i
+* Cov(x_k, x_j) for all j!=k, j!=i, k!=i, i~j, i~k

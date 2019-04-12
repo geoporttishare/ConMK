@@ -1,0 +1,189 @@
+---
+title: "Contextual MK example 1"
+author: "Tuomas Rajala"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(ConMK)
+library(raster)
+library(parallel)
+options(mc.cores = 8)
+data("test_stacks2")
+hastrend <- test_stacks2$hastrend
+stacks <- test_stacks2[-5]
+```
+
+```{r, echo=F}
+# fp/fn for the trend detection images
+plot_isit <- function(x, ..., p, a  = 0.05) {
+  if(missing(x)) {
+    # multiple testing correction: 
+    pv <- sort(values(p))
+    e <- a/( length(pv) - 1:length(pv) + 1 )
+    th <- pv[ 1+sum(!(pv>e)) ]
+    #th <- quantile(pv, a, na.rm=TRUE)
+    x <- p < th
+  }
+  plot(x, ..., zlim = c(0,1), axes=F)
+  zz <- na.omit(cbind(values(hastrend) != 0, values(x) != 0))
+  z <- c(tp=  sum( zz[zz[,2],1] )/sum(zz[,1]), 
+         fp = sum( !zz[zz[,2],1] )/sum(!zz[,1]))
+  z <- round(z, 3)
+  fpff <- paste0("tp=", z[1], " fp=", z[2]) 
+  title(sub = fpff, line = .25, cex=.8)
+}
+
+```
+
+
+Dev notes of the package for computing contextual Mann-Kendall test.
+
+
+We have three four stacks: noise; cell-wise AR(1)-noise; noise with trend; AR(1) noise with trend. See examples below. Most notably the trend is only present in the middle section of the region.
+
+```{r, fig.height=8, fig.width=10, echo=FALSE}
+par(mfrow = c(4,4), mar = c(2,2,4,4))
+for(n in names(stacks)) for(i in 1:4) {plot(stacks[[n]], i*5,main="");title(main = paste0(n, " t=", i*5))}
+```
+
+
+The idea of the contextual MK is that if a trend is present somewhere it should be present also nearby. This amounts to spatial-smoothing at some stage of the testing. Here is the significant cells without and with temporal correlation present:
+
+```{r, fig.width=9, fig.height=4}
+fun <- function(v, ...) {
+  if(sum(is.na(v))>1) return(NA)
+  mann_kendall(v, est_beta = FALSE)$p
+}
+mk <- stackApply(stacks$trend, 1, fun)
+mka <- stackApply(stacks$artrend, 1, fun)
+par(mfrow=c(1,2))
+plot_isit(  mk < 0.05, legend=F, main = "trend")
+plot_isit(  mka< 0.05, legend=F, main = "artrend")
+```
+
+We see that we get some false positives and false negatives. The AR-errors increase clearly the false-positive rates.
+
+The idea would be to smoothen at some point of the analysis so that only the ones at the middle are positive.
+
+First step is to get rid of the AR-noise by "whitening" it (Wang & Swail 2001).
+
+```{r, fig.width=5,fig.height=3}
+sw <- wang_swail_prewhiten_stack(stacks$artrend, useC=TRUE)
+stacks$artrend_w <- stack(sw[[-1]]) # drop the first NA layer lost due to whitening
+mkaw <- stackApply(stacks$artrend_w, 1, fun)
+par(mar=c(2,2,2,2))
+plot_isit(mkaw < 0.05, legend=F, main ="artrend, whitened")
+```
+
+We can see that the FP rate of the non-AR error data and the whitened is around the requested 5%, but the AR inflates that rate. The whitening seems to work, but note how much worse the true positive rate is.
+
+NOTE:
+
+* this is only one realisation (per model), should average over more realisations
+* no multiple testing correction; there are 2400 tests in this example, so expect 5% FP rate
+
+
+## Smoothing 
+
+We follow the paper by Neeti&Eastman and do a "contextual MK". First, the test statistic values are filtered with a constant weight queen-filter. And then, since the variance is changed, the new variance (per cell again, pointwise tests still) is estimated using standard variance-covariance formula. <!--It will be interesting to see how the permutation version compares, as the computational cost is greatly increased in CMK due to the variance-covariance estimation. -->
+
+
+```{r, fig.height=12, fig.width=10}
+cmk <- mclapply(stacks[1:5], contextual_mann_kendall)
+par(mfrow=c(5,4), mar = c(2,2,4,2))
+
+for(n in names(cmk)){
+  w <- cmk[[n]]
+  plot(w$Sm, main = paste0(n, " S.mooth"), legend=F)
+  plot(w$s2, main = "corrected variance", legend=F)
+  plot_isit(w$p < 0.05, main = " p < 0.05 pointwise", legend=F)
+  plot_isit(p = w$p, main ="multiple test corrected", legend=F)
+}
+
+```
+
+(Correction: Holm-Bonferroni)
+
+<!-- 
+
+
+## Alternative approach: Permutations and global envelope tests
+
+Summary is the same, MK sign sum. In the above test the asymptotic normality is used for $P_0$. Also, no multiple testing correction is applied. 
+
+This time we estimate $P_0$ by permutations. Additionally, we apply multiple testing correction ysing the global envelope test.
+
+
+```{r perm1, cache=!TRUE, echo = F, eval=FALSE}
+library(parallel)
+#library(GET)
+
+perm_stats <- function(s, nperm = 100) {
+  nl <- nlayers(s)
+  fun <- function(v,...) {
+    if(sum(is.na(v))>1) return(NA)
+    Ss <- ConMK:::c_mann_kendall_test(v)
+    Ss$S
+  }
+  one <- function(r) values(Sr <- stackApply(r, 1, fun))
+  v0 <- one(s)
+  # goooo!
+  perms <- sapply(1:nperm, function(a) sample(nl))
+  vsim <- mclapply(1:nperm, function(i) one( s[[perms[,i]]] ))
+  vsim <- do.call(cbind, vsim)
+  N <- nrow(vsim)
+  ok <- !is.na(v0)
+  cs <- create_curve_set(list(r = (1:N)[ok], obs = v0[ok], sim_m = vsim[ok,]))
+  #cr <- central_region(cs, coverage = .95)
+  cr <- global_envelope_test(cs)
+  # above raster
+  rme <- rhi <- rlo <- s[[1]]
+  rme[ok] <- cr$central
+  rhi[ok] <- cr$hi
+  rlo[ok] <- cr$lo
+  rd <- setValues(s[[1]],v0)
+  # do basic pointwise MC test as well
+  mea <- rowMeans(vsim)
+  mc_p <- rowMeans(abs(mea-vsim) > abs(mea-v0))
+  mc <- setValues(s[[1]], mc_p)
+  #
+  quantiles <- stack(rhi, rme, rlo, rd, mc)
+  names(quantiles) <- c("hi", "median", "lo", "data", "mc")
+  quantiles
+}
+
+# run
+pert <- perm_stats( stacks$trend, nperm = 1000 )
+perat<- perm_stats( stacks$artrend, nperm = 1000 )
+peratw<- perm_stats( stacks$artrend_w, nperm = 1000 )
+```
+
+```{r, fig.width = 12, fig.height=9, echo =F , eval=F}
+# 
+par(mfrow = c(3,3))
+pl <- list(trend = pert, artrend = perat, artrend_w = peratw)
+for(n in names(pl)){
+  p <- pl[[n]]
+  plot_isit(p$mc < 0.05, main   = paste(n, " pointwise mad"))
+  plot_isit(p$hi < p$data, main = paste(n, "GE data too high"))
+  plot_isit(p$lo > p$data, main = paste(n, "GE data too low"))
+}
+```
+
+Pointwise MC test results very similar to the earlier asymptotic test results, meaning that the MK test is validated. The global envelope test, here the extreme rank length 'erl', work better in terms of false positives but as typical true positive rate is decreased, quite drametically it seems from above 90% to 50%. The whitened data is tricky for the GE technique, TP falls to 16%. 
+
+
+-->
+
+
+
+
+
+
+
+
+
