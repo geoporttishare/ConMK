@@ -3,19 +3,24 @@ title: "Contextual MK example 1"
 author: "Tuomas Rajala"
 date: "`r Sys.Date()`"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 library(ConMK)
 library(raster)
 library(parallel)
-options(mc.cores = 8)
+options(mc.cores = 1)
 data("test_stacks2")
 hastrend <- test_stacks2$hastrend
 stacks <- test_stacks2[-5]
+
+exs1 <- stacks$trend[600][1,]
+
 ```
+
+
 
 ```{r, echo=F}
 # fp/fn for the trend detection images
@@ -42,13 +47,41 @@ plot_isit <- function(x, ..., p, a  = 0.05) {
 
 Dev notes of the package for computing contextual Mann-Kendall test.
 
+# Intro
 
-We have three four stacks: noise; cell-wise AR(1)-noise; noise with trend; AR(1) noise with trend. See examples below. Most notably the trend is only present in the middle section of the region.
+Consider testing if a timeseries $x_1,...,x_T$ has a monotone trend. One such test is the (semi-parametric) Mann-Kendall test with test statistic
+$$S = \sum_{i>j} sign(x_j-x_i)$$
+The summary under no-trend hypothesis has a known variance depending only on $T$ and is asymptotically Gaussian so a test is readily available. 
+
+Example: 
+
+```{r}
+ts.plot(exs1, ylim = c(-1,1)*.5)
+
+mann_kendall(exs1)
+```
+
+```
+for(i in 1:10)
+```
+
+
+In this case the test suggests a very small upwards trend. (the ```betahat``` is a linear slope estimate).
+
+We will now apply this test to a set of of timeseries arranged on a lattice. Each timepoint amounts then to a raster, and the series to a raster stack. 
+
+# RasterStack version
+
+Consider four synthetic stacks: noise; cell-wise AR(1)-noise; noise with trend; AR(1) noise with trend. See examples below. Most notably the trend is only present in the middle section of the region.
 
 ```{r, fig.height=8, fig.width=10, echo=FALSE}
 par(mfrow = c(4,4), mar = c(2,2,4,4))
-for(n in names(stacks)) for(i in 1:4) {plot(stacks[[n]], i*5,main="");title(main = paste0(n, " t=", i*5))}
+for(n in names(stacks)) for(i in 1:4) {plot(stacks[[n]], i*5,main="");title(main = paste0(n, "   t=", i*5))}
 ```
+
+* osa yksi
+* ossa kasi
+* kolmas
 
 
 The idea of the contextual MK is that if a trend is present somewhere it should be present also nearby. This amounts to spatial-smoothing at some stage of the testing. Here is the significant cells without and with temporal correlation present:
@@ -63,6 +96,14 @@ mka <- stackApply(stacks$artrend, 1, fun)
 par(mfrow=c(1,2))
 plot_isit(  mk < 0.05, legend=F, main = "trend")
 plot_isit(  mka< 0.05, legend=F, main = "artrend")
+
+#####
+# NOTE: New version handles the pointwise mann-kendall faster with
+# mk2 <- contextual_mann_kendall(stacks$trend, neighbourhood = 0)
+# all.equal(mk, mk2$p) # TRUE
+# 
+
+
 ```
 
 We see that we get some false positives and false negatives. The AR-errors increase clearly the false-positive rates.
@@ -98,7 +139,7 @@ par(mfrow=c(5,4), mar = c(2,2,4,2))
 
 for(n in names(cmk)){
   w <- cmk[[n]]
-  plot(w$Sm, main = paste0(n, " S.mooth"), legend=F)
+  plot(w$S, main = paste0(n, " S.mooth"), legend=F)
   plot(w$s2, main = "corrected variance", legend=F)
   plot_isit(w$p < 0.05, main = " p < 0.05 pointwise", legend=F)
   plot_isit(p = w$p, main ="multiple test corrected", legend=F)
