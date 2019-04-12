@@ -38,7 +38,7 @@ wang_swail_prewhiten_stack <- function(x, ...) {
 #' in Northern Hemisphere Oceans and Related Atmoshperic Circulation Regimes, \emph{Journal of Climate}
 #' @export
 
-wang_swail_prewhiten_1d <- function(x, ..., eps = 1e-4, rho_th = 0.05, itmax=20, useC=FALSE) {
+wang_swail_prewhiten_1d <- function(x, ..., eps = 1e-4, rho_th = 0.05, itmax=20, useC=TRUE) {
   #
   x <- check_x(x)
   y <- x[,1]
