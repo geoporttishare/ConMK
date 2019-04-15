@@ -19,8 +19,8 @@
 #' @references
 #' Neeti, N. and Eastman J.R. (2011) A Contextual Mann-Kendall Approach for the Assesment of Trend Significance in Image Time Series, \emph{Transactions in GIS}
 #' @useDynLib ConMK
-#' @import raster progress SpaDES.tools
-#' @export
+# @import raster progress SpaDES.tools
+# @export
 split_calc_wrapper <- function(x, nx, ny, buffer = c(1,1), fun, ..., dbg = FALSE){
   #
   # Something wrong with the splitRaster-mergeRaster of SpaDES.
