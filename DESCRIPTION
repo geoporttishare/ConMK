@@ -1,7 +1,7 @@
 Package: ConMK
 Type: Package
 Title: Contextual Mann-Kendall
-Version: 0.1
+Version: 0.2
 Author: Tuomas Rajala
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
