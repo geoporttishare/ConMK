@@ -4,34 +4,37 @@
 \alias{split_calc_wrapper}
 \title{Split-Calc-Merge Wrapper}
 \usage{
-split_calc_wrapper(x, nx, ny, buffer = c(1, 1), fun, ..., dbg = FALSE)
+split_calc_wrapper(x, nx, ny, buffer = c(1, 1), fun, ..., dbg = FALSE,
+  byrowcol = TRUE)
 }
 \arguments{
 \item{x}{Raster stack}
 
-\item{nx}{passed on to splitRaster}
+\item{nx}{Number of x-dimension divisions}
 
-\item{ny}{passed on to splitRaster}
+\item{ny}{Number of y-dimension divisions}
 
-\item{buffer}{passed on to splitRaster}
+\item{buffer}{Extent each sub-raster* by this many cells}
 
-\item{fun}{The function to call per piece. Should return either a raster or stack}
+\item{fun}{The function to call per piece. Should return either a raster or stack of identical dimensions as input for it.}
 
 \item{...}{passed to fun in argument list after the piece}
 
 \item{dbg}{Print messages?}
 
-\item{neighbourhood}{2:queen, 1:rook, 0:none (classical M-K test)}
+\item{byrowcol}{Split by row-col indices instead of spatial extents? Recommended to keep this TRUE}
 }
 \description{
-Takes a raster stack, splits it to pieces, apply fun for each sub-stack, and then merges together.
+Takes a raster stack, splits it into pieces, apply fun for each sub-stack, and then merges together.
 }
 \details{
 The result should be identical to just calling 'fun(x, ...)'.
+
+This function automatically takes advantage of raster-package's multicore setup. See \link{beginCluster} for details how to use it.
 }
 \note{
-If at stitching a message about different buffers appears (from 'mergeRaster()'), the (nx,ny) pair
-is problematic for 'mergeRaster' and the resulting raster will have artifacts in the splitted edges. Different (nx,ny) is the only way to get around this at the moment. (Should be fixed by devs!)
+If byrowcol=FALSE: a stitching message about different buffers might appear (from 'mergeRaster()'), the (nx,ny) pair
+is problematic for 'mergeRaster' and the resulting raster will have artifacts in the splitted edges. Different (nx,ny) is the only way to get around this at the moment.
 }
 \references{
 Neeti, N. and Eastman J.R. (2011) A Contextual Mann-Kendall Approach for the Assesment of Trend Significance in Image Time Series, \emph{Transactions in GIS}

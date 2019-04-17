@@ -14,6 +14,7 @@
 contextual_mann_kendall <- function(x, ..., neighbourhood = 2) {
   # center first
   if( !canProcessInMemory(x) ) stop("'canProcessInMemory' return FALSE")
+  t0 <- Sys.time()
   x <- x - mean(x)
   X <- values(x)
   nr <- nrow(x)
@@ -26,5 +27,7 @@ contextual_mann_kendall <- function(x, ..., neighbourhood = 2) {
   Z <- (Sm+(1-2*D))/sqrt(s2)
   p <- 2*(1 - abs(pnorm(abs(Z))))
   r <- x[[1]]
-  stack(list(S=setValues(r, Sm), s2 = setValues(r, s2), p = setValues(r, p)))
+  out <- stack(list(S=setValues(r, Sm), s2 = setValues(r, s2), p = setValues(r, p)))
+  attr(out,"timing") <-Sys.time() - t0
+  out
 }
