@@ -24,13 +24,18 @@ split_calc_wrapper(x, nx, ny, buffer = c(1, 1), fun, ..., dbg = FALSE,
 
 \item{byrowcol}{Split by row-col indices instead of spatial extents? Recommended to keep this TRUE}
 }
+\value{
+The output is a list. The first element of this list, called 'result', should be identical to the output of simply calling 'fun(x, ...)'. The remaining elements contain various information related to the calculation, e.g. time spent.
+}
 \description{
-Takes a raster stack, splits it into pieces, apply fun for each sub-stack, and then merges together.
+Takes a raster stack, splits it into pieces, applies a function on each sub-stack, and then merges the results together.
 }
 \details{
-The result should be identical to just calling 'fun(x, ...)'.
+This function automatically takes advantage of raster-package's multicore setup.
+See \link{beginCluster} for details how to use it.
 
-This function automatically takes advantage of raster-package's multicore setup. See \link{beginCluster} for details how to use it.
+The 'fun' should take a rasterStack as input and also should return a rasterStack
+(or raster).
 }
 \note{
 If byrowcol=FALSE: a stitching message about different buffers might appear (from 'mergeRaster()'), the (nx,ny) pair

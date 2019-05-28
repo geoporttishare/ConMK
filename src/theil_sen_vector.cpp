@@ -15,3 +15,4 @@ NumericVector c_theil_sen_vector(NumericVector x,
   }
   return w;
 }
+

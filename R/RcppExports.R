@@ -9,8 +9,12 @@ mann_kendall_S <- function(x) {
     .Call('_ConMK_mann_kendall_S', PACKAGE = 'ConMK', x)
 }
 
-c_contextual_mann_kendall <- function(x, nrow, neighbourhood = 2L) {
-    .Call('_ConMK_c_contextual_mann_kendall', PACKAGE = 'ConMK', x, nrow, neighbourhood)
+mann_kendall_S_and_slope <- function(x, time) {
+    .Call('_ConMK_mann_kendall_S_and_slope', PACKAGE = 'ConMK', x, time)
+}
+
+c_contextual_mann_kendall <- function(x, nrow, time, neighbourhood = 2L, calc_slope = FALSE) {
+    .Call('_ConMK_c_contextual_mann_kendall', PACKAGE = 'ConMK', x, nrow, time, neighbourhood, calc_slope)
 }
 
 c_mann_kendall_test <- function(x) {

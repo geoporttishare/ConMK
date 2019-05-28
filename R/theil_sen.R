@@ -13,3 +13,4 @@ theil_sen <- function(x, t = 1:length(x), ...) {
   delta <- c_theil_sen_vector(as.numeric(x), t)
   median(delta, na.rm = TRUE)
 }
+

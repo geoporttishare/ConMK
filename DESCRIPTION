@@ -1,11 +1,10 @@
 Package: ConMK
 Type: Package
 Title: Contextual Mann-Kendall
-Version: 0.3
+Version: 0.4
 Author: Tuomas Rajala
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Cell-wise and Contextual Mann Kendall trend tests for rasterStacks.
 License: What license is it under?
 Encoding: UTF-8
 Requires: raster

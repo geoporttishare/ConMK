@@ -27,16 +27,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mann_kendall_S_and_slope
+NumericMatrix mann_kendall_S_and_slope(NumericMatrix x, NumericVector time);
+RcppExport SEXP _ConMK_mann_kendall_S_and_slope(SEXP xSEXP, SEXP timeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type time(timeSEXP);
+    rcpp_result_gen = Rcpp::wrap(mann_kendall_S_and_slope(x, time));
+    return rcpp_result_gen;
+END_RCPP
+}
 // c_contextual_mann_kendall
-List c_contextual_mann_kendall(NumericMatrix x, int nrow, int neighbourhood);
-RcppExport SEXP _ConMK_c_contextual_mann_kendall(SEXP xSEXP, SEXP nrowSEXP, SEXP neighbourhoodSEXP) {
+List c_contextual_mann_kendall(NumericMatrix x, int nrow, NumericVector time, int neighbourhood, bool calc_slope);
+RcppExport SEXP _ConMK_c_contextual_mann_kendall(SEXP xSEXP, SEXP nrowSEXP, SEXP timeSEXP, SEXP neighbourhoodSEXP, SEXP calc_slopeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type time(timeSEXP);
     Rcpp::traits::input_parameter< int >::type neighbourhood(neighbourhoodSEXP);
-    rcpp_result_gen = Rcpp::wrap(c_contextual_mann_kendall(x, nrow, neighbourhood));
+    Rcpp::traits::input_parameter< bool >::type calc_slope(calc_slopeSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_contextual_mann_kendall(x, nrow, time, neighbourhood, calc_slope));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -156,7 +170,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_ConMK_c_autocorrelation_1", (DL_FUNC) &_ConMK_c_autocorrelation_1, 1},
     {"_ConMK_mann_kendall_S", (DL_FUNC) &_ConMK_mann_kendall_S, 1},
-    {"_ConMK_c_contextual_mann_kendall", (DL_FUNC) &_ConMK_c_contextual_mann_kendall, 3},
+    {"_ConMK_mann_kendall_S_and_slope", (DL_FUNC) &_ConMK_mann_kendall_S_and_slope, 2},
+    {"_ConMK_c_contextual_mann_kendall", (DL_FUNC) &_ConMK_c_contextual_mann_kendall, 5},
     {"_ConMK_c_mann_kendall_test", (DL_FUNC) &_ConMK_c_mann_kendall_test, 1},
     {"_ConMK_c_mann_kendall_test_and_beta", (DL_FUNC) &_ConMK_c_mann_kendall_test_and_beta, 2},
     {"_ConMK_neighbour_cells_queen_row_col", (DL_FUNC) &_ConMK_neighbour_cells_queen_row_col, 3},

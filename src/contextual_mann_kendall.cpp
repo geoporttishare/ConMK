@@ -54,7 +54,7 @@ NumericVector mann_kendall_S(NumericMatrix x){
   NumericVector out(x.nrow());
   for(i = 0; i < x.nrow(); i++) if(!R_isnancpp(x(i,0))){
     S = 0;
-    for(j = 0; j < ntime; j++)
+    for(j = 0; j < (ntime-1); j++)
       for(k = j+1; k < ntime; k++){
         d = x(i,k) - x(i,j);
         S += d > 0 ? 1 : d < 0 ? -1 : 0;
@@ -65,20 +65,64 @@ NumericVector mann_kendall_S(NumericMatrix x){
 }
 
 
+/* Mann-Kendall S-statistic AND thiel-sen slope assuming uniform steps */
+// [[Rcpp::export]]
+NumericMatrix mann_kendall_S_and_slope(NumericMatrix x, NumericVector time){
+  double d;
+  int i,j,k,l;
+  double S;
+  int ntime = x.ncol();
+  NumericMatrix out(x.nrow(), 2);
+  NumericVector w( ntime * (ntime-1)/2 );
+  for(i = 0; i < x.nrow(); i++) if(!R_isnancpp(x(i,0))){
+    S = 0;
+    l = 0;
+    for(j = 0; j < (ntime-1); j++)
+      for(k = j+1; k < ntime; k++){
+        d = x(i,k) - x(i,j);
+        S += d > 0 ? 1 : d < 0 ? -1 : 0;
+        w(l) = d / ( time(k) - time(j) );
+        l++;
+      }
+      out(i,0) = S;
+      out(i,1) = median(w);
+  }else {
+    out(i,0) = R_NaReal;
+    out(i,1) = R_NaReal;
+  }
+  return out;
+}
+
+
+
 // we assume x[,i] is given in col-row order, raster does this
 
 // [[Rcpp::export]]
 List c_contextual_mann_kendall(NumericMatrix x, int nrow,
-                               int neighbourhood = 2)  // 2 queen, 0 none
+                               NumericVector time,
+                               int neighbourhood = 2,  // 2 queen, 0 none
+                               bool calc_slope = false)
   {
   int N = x.nrow();
   int ncol = N/nrow;
   int ntime = x.ncol();
-  // stastic at each cell
-  NumericVector MKS = mann_kendall_S(x);
-  // compute covs for the covariance formula
-  NumericMatrix covs = local_stats(x, nrow, MKS, neighbourhood);
+  NumericVector slope;
+  NumericMatrix covs;
+  NumericVector MKS;
+  NumericMatrix MKSm;
 
+    if(!calc_slope) {
+    // stastic at each cell
+    MKS = mann_kendall_S(x);
+    // compute covs for the covariance formula
+    covs = local_stats(x, nrow, MKS, neighbourhood);
+  }else{
+    MKSm = mann_kendall_S_and_slope(x, time);
+    // compute covs for the covariance formula
+    Rprintf("%i\n", MKSm.nrow());
+    covs = local_stats(x, nrow, MKSm(_,0), neighbourhood);
+    slope = MKSm(_,1);
+  }
   // we have all components now. Let's compute the the test statistic
   // and variance
   NumericMatrix S_and_s2(N,2);
@@ -129,6 +173,12 @@ List c_contextual_mann_kendall(NumericMatrix x, int nrow,
     }
   }
 
-  return List::create(covs, MKS, S_and_s2, N, ncol, ntime);
+  return List::create(Named("covs")=covs,
+                      //MKS,
+                      Named("S_and_s2") = S_and_s2,
+                      Named("N")=N,
+                      Named("ncol")=ncol,
+                      Named("ntime")=ntime,
+                      Named("slope")=slope);
 }
 

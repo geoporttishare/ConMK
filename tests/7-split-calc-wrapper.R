@@ -8,7 +8,7 @@ x <- stack(test_stacks3$trend)
 
 
 # direct
-if(!exists("a")) a <- contextual_mann_kendall(x)
+if(!exists("a")) a <- contextual_mann_kendall(x, calc_slope = TRUE)
 
 
 ########################
@@ -34,13 +34,23 @@ print(c(direct=attr(a,"timing"), ex=k$timing$stitch, rc= k2$timing$stitch))
 }
 
 
+
+
+
 ########################
 # Check snow
+
 if(1){
 beginCluster(n=3)
-k <-  split_calc_wrapper(x, nx=3, ny=4, buffer = c(1,1), fun = contextual_mann_kendall, dbg=TRUE)
-b <- k$result
-(all.equal(a[],b[]))
-print(c(direct=attr(a,"timing"), ex=k$timing$stitch))
+k <-  split_calc_wrapper(x, nx=3, ny=4, buffer = c(1,1), fun = contextual_mann_kendall, calc_slope = TRUE, dbg=TRUE)
 endCluster()
+
+b <- k$result
+print(all.equal(a[],b[])) # should be identical
+
+print(c(onepiece=attr(a,"timing"), splitted=k$timing$stitch))
+
 }
+
+
+
