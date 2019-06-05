@@ -119,7 +119,7 @@ List c_contextual_mann_kendall(NumericMatrix x, int nrow,
   }else{
     MKSm = mann_kendall_S_and_slope(x, time);
     // compute covs for the covariance formula
-    Rprintf("%i\n", MKSm.nrow());
+    //Rprintf("%i\n", MKSm.nrow());
     covs = local_stats(x, nrow, MKSm(_,0), neighbourhood);
     slope = MKSm(_,1);
   }

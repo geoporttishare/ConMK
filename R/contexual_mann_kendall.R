@@ -6,6 +6,7 @@
 #' @param x Raster stack, each layer denoting one timestep. Equidistant steps of time 1 assumed.
 #' @param neighbourhood 2:queen, 1:rook, 0:none (classical M-K test) Only 2 and 0 implemented.
 #' @param calc_slope Calculate Theil-Sen slope estimate for each series? Default:FALSE
+#' @param time Optional numerical vector for the sampling times.
 #'
 #' @details  Assume that the values of each rasterStack location (cell) over time (layers) are a time-series. This function calculates the Mann-Kendall trend test for each series, and returns the relevant statistics as a new rasterStack.
 #'
@@ -15,7 +16,7 @@
 #'  on the non-contextual/cellwise statistic raster.
 #'  However, this function also calculates the adjusted variances (and hence the p-values).
 #'
-#' NOTE assumes equal interval timeseries.
+#' NOTE assumes equal interval timeseries if 'time' is missing. Matters only for the slope calculation.
 #'
 #'
 #' @return A rasterStack with layers: 'S' for the Mann-Kendall Statistic (classical or smoothed);
@@ -28,17 +29,21 @@
 #' @import raster
 #' @export
 
-contextual_mann_kendall <- function(x, ..., neighbourhood = 2, calc_slope = FALSE) {
+contextual_mann_kendall <- function(x, ..., neighbourhood = 2, calc_slope = FALSE,  time) {
   if(!neighbourhood %in% c(0,2)) stop("Only '0' and '2' neighbourhoods implemented.")
   # center first
   if( !canProcessInMemory(x) ) stop("'canProcessInMemory' return FALSE")
   t0 <- Sys.time()
   x <- x - mean(x)
-  X <- values(x)
+  X <- values(stack(x))
   nr <- nrow(x)
+  # check time
+  if(missing(time)) time <- 1:ncol(X)
+  time <- sort(time)
+  if(length(time) != ncol(X)|!is.numeric(time)) stop(paste0("'time' should be a numeric increasing vector of length ", ncol(X)))
   # c_contextual_mann_kendall(v, nr)
   #browser()
-  res <- c_contextual_mann_kendall( X , nr, time = 1:ncol(X),
+  res <- c_contextual_mann_kendall( X , nr, time = time,
                                     neigh = neighbourhood, calc_slope = calc_slope)
   V <- res$S_and_s2
   Sm <- V[,1]

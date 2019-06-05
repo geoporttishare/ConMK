@@ -54,6 +54,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// c_focal_average
+NumericMatrix c_focal_average(NumericMatrix x, int nrow, int neighbourhood);
+RcppExport SEXP _ConMK_c_focal_average(SEXP xSEXP, SEXP nrowSEXP, SEXP neighbourhoodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< int >::type neighbourhood(neighbourhoodSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_focal_average(x, nrow, neighbourhood));
+    return rcpp_result_gen;
+END_RCPP
+}
 // c_mann_kendall_test
 List c_mann_kendall_test(NumericVector x);
 RcppExport SEXP _ConMK_c_mann_kendall_test(SEXP xSEXP) {
@@ -129,16 +142,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_hello
-List rcpp_hello();
-RcppExport SEXP _ConMK_rcpp_hello() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello());
-    return rcpp_result_gen;
-END_RCPP
-}
 // c_theil_sen_vector
 NumericVector c_theil_sen_vector(NumericVector x, NumericVector t);
 RcppExport SEXP _ConMK_c_theil_sen_vector(SEXP xSEXP, SEXP tSEXP) {
@@ -172,13 +175,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ConMK_mann_kendall_S", (DL_FUNC) &_ConMK_mann_kendall_S, 1},
     {"_ConMK_mann_kendall_S_and_slope", (DL_FUNC) &_ConMK_mann_kendall_S_and_slope, 2},
     {"_ConMK_c_contextual_mann_kendall", (DL_FUNC) &_ConMK_c_contextual_mann_kendall, 5},
+    {"_ConMK_c_focal_average", (DL_FUNC) &_ConMK_c_focal_average, 3},
     {"_ConMK_c_mann_kendall_test", (DL_FUNC) &_ConMK_c_mann_kendall_test, 1},
     {"_ConMK_c_mann_kendall_test_and_beta", (DL_FUNC) &_ConMK_c_mann_kendall_test_and_beta, 2},
     {"_ConMK_neighbour_cells_queen_row_col", (DL_FUNC) &_ConMK_neighbour_cells_queen_row_col, 3},
     {"_ConMK_neighbour_cells_queen_col_row", (DL_FUNC) &_ConMK_neighbour_cells_queen_col_row, 3},
     {"_ConMK_forward_neighbour_cells_queen_row_col", (DL_FUNC) &_ConMK_forward_neighbour_cells_queen_row_col, 3},
     {"_ConMK_forward_neighbour_cells_queen_col_row", (DL_FUNC) &_ConMK_forward_neighbour_cells_queen_col_row, 3},
-    {"_ConMK_rcpp_hello", (DL_FUNC) &_ConMK_rcpp_hello, 0},
     {"_ConMK_c_theil_sen_vector", (DL_FUNC) &_ConMK_c_theil_sen_vector, 2},
     {"_ConMK_c_wang_swail_prewithen_1d", (DL_FUNC) &_ConMK_c_wang_swail_prewithen_1d, 5},
     {NULL, NULL, 0}

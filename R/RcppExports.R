@@ -17,6 +17,10 @@ c_contextual_mann_kendall <- function(x, nrow, time, neighbourhood = 2L, calc_sl
     .Call('_ConMK_c_contextual_mann_kendall', PACKAGE = 'ConMK', x, nrow, time, neighbourhood, calc_slope)
 }
 
+c_focal_average <- function(x, nrow, neighbourhood = 2L) {
+    .Call('_ConMK_c_focal_average', PACKAGE = 'ConMK', x, nrow, neighbourhood)
+}
+
 c_mann_kendall_test <- function(x) {
     .Call('_ConMK_c_mann_kendall_test', PACKAGE = 'ConMK', x)
 }
@@ -39,10 +43,6 @@ forward_neighbour_cells_queen_row_col <- function(i, nrow, ncol) {
 
 forward_neighbour_cells_queen_col_row <- function(i, nrow, ncol) {
     .Call('_ConMK_forward_neighbour_cells_queen_col_row', PACKAGE = 'ConMK', i, nrow, ncol)
-}
-
-rcpp_hello <- function() {
-    .Call('_ConMK_rcpp_hello', PACKAGE = 'ConMK')
 }
 
 c_theil_sen_vector <- function(x, t) {

@@ -4,12 +4,15 @@
 \alias{contextual_mann_kendall}
 \title{Contextual Mann-Kendall Trend Test}
 \usage{
-contextual_mann_kendall(x, ..., neighbourhood = 2, calc_slope = FALSE)
+contextual_mann_kendall(x, ..., neighbourhood = 2, time,
+  calc_slope = FALSE)
 }
 \arguments{
 \item{x}{Raster stack, each layer denoting one timestep. Equidistant steps of time 1 assumed.}
 
 \item{neighbourhood}{2:queen, 1:rook, 0:none (classical M-K test) Only 2 and 0 implemented.}
+
+\item{time}{Optional numerical vector for the sampling times.}
 
 \item{calc_slope}{Calculate Theil-Sen slope estimate for each series? Default:FALSE}
 }
@@ -31,7 +34,7 @@ Assume that the values of each rasterStack location (cell) over time (layers) ar
  on the non-contextual/cellwise statistic raster.
  However, this function also calculates the adjusted variances (and hence the p-values).
 
-NOTE assumes equal interval timeseries.
+NOTE assumes equal interval timeseries if 'time' is missing. Matters only for the slope calculation.
 }
 \references{
 Neeti, N. and Eastman J.R. (2011) A Contextual Mann-Kendall Approach for the Assesment of Trend Significance in Image Time Series, \emph{Transactions in GIS}

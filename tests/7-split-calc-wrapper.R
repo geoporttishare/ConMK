@@ -2,7 +2,7 @@
 
 devtools::load_all()
 
-data("test_stacks3")
+load("test_stacks3.rda")
 x <- stack(test_stacks3$trend)
 #x <- crop(  x , extent(0, 1, 0, .5))
 
@@ -42,7 +42,8 @@ print(c(direct=attr(a,"timing"), ex=k$timing$stitch, rc= k2$timing$stitch))
 
 if(1){
 beginCluster(n=3)
-k <-  split_calc_wrapper(x, nx=3, ny=4, buffer = c(1,1), fun = contextual_mann_kendall, calc_slope = TRUE, dbg=TRUE)
+k <-  split_calc_wrapper(x, nx=3, ny=4, buffer = c(1,1), fun = contextual_mann_kendall, calc_slope = TRUE,
+                         dbg=TRUE)
 endCluster()
 
 b <- k$result
