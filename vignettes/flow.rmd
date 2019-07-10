@@ -149,7 +149,7 @@ for(n in names(cmk)){
 
 (Correction: Holm-Bonferroni)
 
-<!-- 
+#<!-- 
 
 
 ## Alternative approach: Permutations and global envelope tests
@@ -161,7 +161,7 @@ This time we estimate $P_0$ by permutations. Additionally, we apply multiple tes
 
 ```{r perm1, cache=!TRUE, echo = F, eval=FALSE}
 library(parallel)
-#library(GET)
+library(GET)
 
 perm_stats <- function(s, nperm = 100) {
   nl <- nlayers(s)
@@ -205,7 +205,7 @@ peratw<- perm_stats( stacks$artrend_w, nperm = 1000 )
 
 ```{r, fig.width = 12, fig.height=9, echo =F , eval=F}
 # 
-par(mfrow = c(3,3))
+par(mfrow = c(3, 3))
 pl <- list(trend = pert, artrend = perat, artrend_w = peratw)
 for(n in names(pl)){
   p <- pl[[n]]
@@ -213,6 +213,7 @@ for(n in names(pl)){
   plot_isit(p$hi < p$data, main = paste(n, "GE data too high"))
   plot_isit(p$lo > p$data, main = paste(n, "GE data too low"))
 }
+#
 ```
 
 Pointwise MC test results very similar to the earlier asymptotic test results, meaning that the MK test is validated. The global envelope test, here the extreme rank length 'erl', work better in terms of false positives but as typical true positive rate is decreased, quite drametically it seems from above 90% to 50%. The whitened data is tricky for the GE technique, TP falls to 16%. 
