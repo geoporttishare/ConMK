@@ -16,8 +16,9 @@ NumericMatrix local_stats(NumericMatrix x, int nrow,
 
   // neighbourhood
   IntegerVector (*forward_neighbour_cells)(int, int, int);
-  if(neighbourhood == 2) forward_neighbour_cells = &forward_neighbour_cells_queen_col_row;
   if(neighbourhood == 0) forward_neighbour_cells = &neighbour_cells_none;
+  if(neighbourhood == 1) forward_neighbour_cells = &forward_neighbour_cells_rook_col_row;
+  if(neighbourhood == 2) forward_neighbour_cells = &forward_neighbour_cells_queen_col_row;
   //double ss = 0;
   //
   for(i = 0; i < N; i++)
@@ -133,8 +134,9 @@ List c_contextual_mann_kendall(NumericMatrix x, int nrow,
 
   // neighbourhood
   IntegerVector (*neighbour_cells)(int, int, int);
-  if(neighbourhood == 2) neighbour_cells = &neighbour_cells_queen_col_row;
   if(neighbourhood == 0) neighbour_cells = &neighbour_cells_none;
+  if(neighbourhood == 1) neighbour_cells = &neighbour_cells_rook_col_row;
+  if(neighbourhood == 2) neighbour_cells = &neighbour_cells_queen_col_row;
 
   for(i = 0; i < N; i++) { //covs is  Smean, sd, nneigh
     Sm = covs(i, 0);

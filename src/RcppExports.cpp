@@ -142,6 +142,58 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// neighbour_cells_rook_row_col
+IntegerVector neighbour_cells_rook_row_col(int i, int nrow, int ncol);
+RcppExport SEXP _ConMK_neighbour_cells_rook_row_col(SEXP iSEXP, SEXP nrowSEXP, SEXP ncolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type i(iSEXP);
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
+    rcpp_result_gen = Rcpp::wrap(neighbour_cells_rook_row_col(i, nrow, ncol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// neighbour_cells_rook_col_row
+IntegerVector neighbour_cells_rook_col_row(int i, int nrow, int ncol);
+RcppExport SEXP _ConMK_neighbour_cells_rook_col_row(SEXP iSEXP, SEXP nrowSEXP, SEXP ncolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type i(iSEXP);
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
+    rcpp_result_gen = Rcpp::wrap(neighbour_cells_rook_col_row(i, nrow, ncol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// forward_neighbour_cells_rook_row_col
+IntegerVector forward_neighbour_cells_rook_row_col(int i, int nrow, int ncol);
+RcppExport SEXP _ConMK_forward_neighbour_cells_rook_row_col(SEXP iSEXP, SEXP nrowSEXP, SEXP ncolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type i(iSEXP);
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
+    rcpp_result_gen = Rcpp::wrap(forward_neighbour_cells_rook_row_col(i, nrow, ncol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// forward_neighbour_cells_rook_col_row
+IntegerVector forward_neighbour_cells_rook_col_row(int i, int nrow, int ncol);
+RcppExport SEXP _ConMK_forward_neighbour_cells_rook_col_row(SEXP iSEXP, SEXP nrowSEXP, SEXP ncolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type i(iSEXP);
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< int >::type ncol(ncolSEXP);
+    rcpp_result_gen = Rcpp::wrap(forward_neighbour_cells_rook_col_row(i, nrow, ncol));
+    return rcpp_result_gen;
+END_RCPP
+}
 // c_theil_sen_vector
 NumericVector c_theil_sen_vector(NumericVector x, NumericVector t);
 RcppExport SEXP _ConMK_c_theil_sen_vector(SEXP xSEXP, SEXP tSEXP) {
@@ -182,6 +234,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ConMK_neighbour_cells_queen_col_row", (DL_FUNC) &_ConMK_neighbour_cells_queen_col_row, 3},
     {"_ConMK_forward_neighbour_cells_queen_row_col", (DL_FUNC) &_ConMK_forward_neighbour_cells_queen_row_col, 3},
     {"_ConMK_forward_neighbour_cells_queen_col_row", (DL_FUNC) &_ConMK_forward_neighbour_cells_queen_col_row, 3},
+    {"_ConMK_neighbour_cells_rook_row_col", (DL_FUNC) &_ConMK_neighbour_cells_rook_row_col, 3},
+    {"_ConMK_neighbour_cells_rook_col_row", (DL_FUNC) &_ConMK_neighbour_cells_rook_col_row, 3},
+    {"_ConMK_forward_neighbour_cells_rook_row_col", (DL_FUNC) &_ConMK_forward_neighbour_cells_rook_row_col, 3},
+    {"_ConMK_forward_neighbour_cells_rook_col_row", (DL_FUNC) &_ConMK_forward_neighbour_cells_rook_col_row, 3},
     {"_ConMK_c_theil_sen_vector", (DL_FUNC) &_ConMK_c_theil_sen_vector, 2},
     {"_ConMK_c_wang_swail_prewithen_1d", (DL_FUNC) &_ConMK_c_wang_swail_prewithen_1d, 5},
     {NULL, NULL, 0}

@@ -30,7 +30,7 @@
 #' @export
 
 contextual_mann_kendall <- function(x, ..., neighbourhood = 2, calc_slope = FALSE,  time) {
-  if(!neighbourhood %in% c(0,2)) stop("Only '0' and '2' neighbourhoods implemented.")
+  if(!neighbourhood %in% c(0,1,2)) stop("Only '0', '1' and '2' neighbourhoods implemented.")
   # center first
   if( !canProcessInMemory(x) ) stop("'canProcessInMemory' return FALSE")
   t0 <- Sys.time()

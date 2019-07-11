@@ -3,7 +3,7 @@
 #' Average value in neighbourhood of each cell.
 #'
 #' @param x raster or rasterStack
-#' @param neighbourhood 2: queen
+#' @param neighbourhood 1: rook 2: queen (default)
 #'
 #' @details NA-neighbour values will be ignored and will not increase the denominator.
 #'
@@ -17,9 +17,9 @@
 #' @export
 
 focal_average <- function(x, ..., neighbourhood = 2) {
-  if(!neighbourhood %in% c(2)) stop("Only '2' neighbourhood implemented.")
+  if(!neighbourhood %in% c(1,2)) stop("Only '1' and '2' neighbourhood implemented.")
   # center first
-  if( !canProcessInMemory(x) ) stop("'canProcessInMemory' return FALSE")
+  if( !canProcessInMemory(x) ) stop("'canProcessInMemory' returned FALSE")
   t0 <- Sys.time()
   X <- values(stack(x))
   nr <- nrow(x)

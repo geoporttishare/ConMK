@@ -15,8 +15,9 @@ NumericMatrix c_focal_average(NumericMatrix x,
   NumericVector nei;
   // neighbourhood
   IntegerVector (*forward_neighbour_cells)(int, int, int);
-  if(neighbourhood == 2) forward_neighbour_cells = &forward_neighbour_cells_queen_col_row;
   if(neighbourhood == 0) forward_neighbour_cells = &neighbour_cells_none;
+  if(neighbourhood == 1) forward_neighbour_cells = &forward_neighbour_cells_rook_col_row;
+  if(neighbourhood == 2) forward_neighbour_cells = &forward_neighbour_cells_queen_col_row;
   //
   for(t = 0; t < ntime; t++) {
     for(i = 0; i < N; i++)

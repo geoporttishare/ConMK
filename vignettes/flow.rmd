@@ -94,7 +94,7 @@ fun <- function(v, ...) {
 mk <- stackApply(stacks$trend, 1, fun)
 mka <- stackApply(stacks$artrend, 1, fun)
 par(mfrow=c(1,2))
-plot_isit(  mk < 0.05, legend=F, main = "trend")
+plot_isit(  mk < 0.05, legend=F, main = "trend") # see the vignette source for definition of 'plot_isit'
 plot_isit(  mka< 0.05, legend=F, main = "artrend")
 
 #####

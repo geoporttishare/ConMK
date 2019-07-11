@@ -45,6 +45,22 @@ forward_neighbour_cells_queen_col_row <- function(i, nrow, ncol) {
     .Call('_ConMK_forward_neighbour_cells_queen_col_row', PACKAGE = 'ConMK', i, nrow, ncol)
 }
 
+neighbour_cells_rook_row_col <- function(i, nrow, ncol) {
+    .Call('_ConMK_neighbour_cells_rook_row_col', PACKAGE = 'ConMK', i, nrow, ncol)
+}
+
+neighbour_cells_rook_col_row <- function(i, nrow, ncol) {
+    .Call('_ConMK_neighbour_cells_rook_col_row', PACKAGE = 'ConMK', i, nrow, ncol)
+}
+
+forward_neighbour_cells_rook_row_col <- function(i, nrow, ncol) {
+    .Call('_ConMK_forward_neighbour_cells_rook_row_col', PACKAGE = 'ConMK', i, nrow, ncol)
+}
+
+forward_neighbour_cells_rook_col_row <- function(i, nrow, ncol) {
+    .Call('_ConMK_forward_neighbour_cells_rook_col_row', PACKAGE = 'ConMK', i, nrow, ncol)
+}
+
 c_theil_sen_vector <- function(x, t) {
     .Call('_ConMK_c_theil_sen_vector', PACKAGE = 'ConMK', x, t)
 }
