@@ -1,7 +1,9 @@
 #' Check 1D timeseries
 #'
-#' @param x time series object
+#' For internal use.
 #'
+#' @param x time series object
+#' @param ... ignored
 #' @export
 
 

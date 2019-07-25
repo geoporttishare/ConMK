@@ -4,14 +4,12 @@
 \alias{p.adjust_raster}
 \title{Adjust p-values in a Raster}
 \usage{
-p.adjust_raster(x, method = c("none", "holm"))
+p.adjust_raster(x, method = c("none", "fdr"))
 }
 \arguments{
 \item{x}{A raster of p-values}
 
 \item{method}{Type of discovery}
-
-\item{alpha}{nominal level, like 0.05 or 0.01}
 }
 \value{
 a raster-object

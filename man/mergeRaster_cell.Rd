@@ -7,11 +7,13 @@
 mergeRaster_cell(x, rclist, r0, buffer)
 }
 \arguments{
-\item{rclist}{row-col data of the split}
+\item{x}{list of rasters, split by row-col}
+
+\item{rclist}{row-col metadata of the split}
 
 \item{r0}{raster with original details}
 
-\item{rlist}{list of rasters, split by row-col}
+\item{buffer}{size of buffer used for splitting}
 }
 \description{
 Merge Rasters Split by row-col

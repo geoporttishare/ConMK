@@ -27,6 +27,7 @@
 #' Neeti, N. and Eastman J.R. (2011) A Contextual Mann-Kendall Approach for the Assesment of Trend Significance in Image Time Series, \emph{Transactions in GIS}
 #' @useDynLib ConMK
 #' @import raster progress
+#' @importFrom methods is
 #' @export
 split_calc_wrapper <- function(x, nx, ny, buffer = c(1,1), fun, ...,
                                dbg = FALSE, byrowcol = TRUE){
@@ -98,7 +99,7 @@ split_calc_wrapper <- function(x, nx, ny, buffer = c(1,1), fun, ...,
   }
   #
   npieces <- length(wlist)
-  doparallel <- raster:::.doCluster() & npieces > 1
+  doparallel <- isTRUE(getOption("rasterCluster")) & npieces > 1
   ##################################################################
   # TODO Parallisation here.
   # Use low-level snow functions in case we need to do intermediate
@@ -174,6 +175,7 @@ split_calc_wrapper <- function(x, nx, ny, buffer = c(1,1), fun, ...,
 #'
 #' @param x list of rasters
 #' @param fun function to apply on the overlapping regions
+#' @param ... ignored
 #'
 
 
@@ -242,9 +244,10 @@ mergeRaster <- function (x, ..., fun = NULL)
 
 #' Merge Rasters Split by row-col
 #'
-#' @param rlist list of rasters, split by row-col
-#' @param rclist row-col data of the split
+#' @param x list of rasters, split by row-col
+#' @param rclist row-col metadata of the split
 #' @param r0 raster with original details
+#' @param buffer size of buffer used for splitting
 #'
 #' @details No checks.
 #'

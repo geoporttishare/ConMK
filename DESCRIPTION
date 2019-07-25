@@ -1,13 +1,14 @@
 Package: ConMK
 Type: Package
 Title: Contextual Mann-Kendall
-Version: 0.5
+Version: 0.6
 Author: Tuomas Rajala
-Maintainer: The package maintainer <yourself@somewhere.net>
+Maintainer: Tuomas Rajala <tuomas.rajala@luke.fi>
 Description: Cell-wise and Contextual Mann Kendall trend tests for rasterStacks.
-License: What license is it under?
+License: GPL-3
 Encoding: UTF-8
-Requires: raster
+Depends: raster, Matrix, progress, stats, methods
+Suggests: snow
 LazyData: true
 Imports: Rcpp (>= 1.0.0)
 LinkingTo: Rcpp

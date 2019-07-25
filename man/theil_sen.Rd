@@ -10,6 +10,8 @@ theil_sen(x, t = 1:length(x), ...)
 \item{x}{Vector of values}
 
 \item{t}{Optional vector of times, numerical}
+
+\item{...}{ignored}
 }
 \description{
 Estimate the slope of a time-series by the

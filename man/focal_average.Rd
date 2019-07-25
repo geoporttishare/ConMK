@@ -9,7 +9,9 @@ focal_average(x, ..., neighbourhood = 2)
 \arguments{
 \item{x}{raster or rasterStack}
 
-\item{neighbourhood}{2: queen}
+\item{...}{ignored}
+
+\item{neighbourhood}{1: rook 2: queen (default)}
 }
 \description{
 Average value in neighbourhood of each cell.

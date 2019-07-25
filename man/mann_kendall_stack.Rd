@@ -4,13 +4,19 @@
 \alias{mann_kendall_stack}
 \title{Mann-Kendall Trend Test for Stack}
 \usage{
-mann_kendall_stack(x, ..., est_beta = TRUE)
+mann_kendall_stack(x, ..., neighbourhood = 0)
 }
 \arguments{
 \item{x}{rasterStack}
 
-\item{est_beta}{Estimate linear coefficient as well? Takes extra effort}
+\item{...}{passed on to \link{contextual_mann_kendall}}
+
+\item{neighbourhood}{default: 0. See \link{contextual_mann_kendall}}
 }
 \description{
-1D. Assuming time as layers
+1D. Assuming time as layers.
+}
+\details{
+Just a wrapper for \link{contextual_mann_kendall} with neighbourhood=0 i.e. no
+smoothing applied.
 }

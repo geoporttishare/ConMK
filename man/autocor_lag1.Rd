@@ -2,13 +2,17 @@
 % Please edit documentation in R/autocor.R
 \name{autocor_lag1}
 \alias{autocor_lag1}
-\title{Quick autocorrelation of lag 1}
+\title{Quick Autocorrelation of Lag 1}
 \usage{
 autocor_lag1(x, ..., check = TRUE)
 }
 \arguments{
 \item{x}{values}
+
+\item{...}{ignored}
+
+\item{check}{check input?}
 }
 \description{
-Quick autocorrelation of lag 1
+1D only, inteded for internal use.
 }

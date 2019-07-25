@@ -3,18 +3,16 @@
 #' Simple wrapper for the p.adjust-function.
 #'
 #' @param x A raster of p-values
-#' @param alpha nominal level, like 0.05 or 0.01
 #' @param method Type of discovery
 #'
 #' @details See \link{p.adjust} for the method parameters.
 #'
 #' @return a raster-object
 #'
-#'
-#'
+#' @importFrom stats p.adjust
 #' @export
 
-p.adjust_raster <- function(x, method = c("none", "holm")) {
+p.adjust_raster <- function(x, method = c("none", "fdr")) {
   #
   pv <- x[]
   ok <- !is.na(pv)

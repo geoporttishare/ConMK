@@ -3,6 +3,7 @@
 #' Average value in neighbourhood of each cell.
 #'
 #' @param x raster or rasterStack
+#' @param ... ignored
 #' @param neighbourhood 1: rook 2: queen (default)
 #'
 #' @details NA-neighbour values will be ignored and will not increase the denominator.

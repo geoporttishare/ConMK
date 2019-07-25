@@ -9,6 +9,16 @@ wang_swail_prewhiten_1d(x, ..., eps = 1e-04, rho_th = 0.05,
 }
 \arguments{
 \item{x}{either vector or matrix with c(x, time)}
+
+\item{...}{ignored}
+
+\item{eps}{threshold for convergence, default 1e-4}
+
+\item{rho_th}{threshold for correlation to be negletable}
+
+\item{itmax}{iteration limit}
+
+\item{useC}{compute on c-side, default: TRUE is way faster.}
 }
 \value{
 list with element W containing the whitened series, one shorter than the original.

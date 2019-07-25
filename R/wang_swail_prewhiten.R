@@ -28,7 +28,11 @@ wang_swail_prewhiten_stack <- function(x, ...) {
 #' Simple 1d timeseries: attempt to remove autocorrelation. Assumes AR(1) errors, and 1 step time-grid.
 #'
 #' @param x either vector or matrix with c(x, time)
-#'
+#' @param ... ignored
+#' @param eps threshold for convergence, default 1e-4
+#' @param rho_th threshold for correlation to be negletable
+#' @param itmax iteration limit
+#' @param useC compute on c-side, default: TRUE is way faster.
 #' @details time is ignored, and assumed to be 1-step integers 1:nrow(x).
 #'
 #' @return list with element W containing the whitened series, one shorter than the original.

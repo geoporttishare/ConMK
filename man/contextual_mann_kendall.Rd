@@ -4,17 +4,19 @@
 \alias{contextual_mann_kendall}
 \title{Contextual Mann-Kendall Trend Test}
 \usage{
-contextual_mann_kendall(x, ..., neighbourhood = 2, time,
-  calc_slope = FALSE)
+contextual_mann_kendall(x, ..., neighbourhood = 2, calc_slope = FALSE,
+  time)
 }
 \arguments{
 \item{x}{Raster stack, each layer denoting one timestep. Equidistant steps of time 1 assumed.}
 
+\item{...}{ignored}
+
 \item{neighbourhood}{2:queen, 1:rook, 0:none (classical M-K test) Only 2 and 0 implemented.}
 
-\item{time}{Optional numerical vector for the sampling times.}
-
 \item{calc_slope}{Calculate Theil-Sen slope estimate for each series? Default:FALSE}
+
+\item{time}{Optional numerical vector for the sampling times.}
 }
 \value{
 A rasterStack with layers: 'S' for the Mann-Kendall Statistic (classical or smoothed);

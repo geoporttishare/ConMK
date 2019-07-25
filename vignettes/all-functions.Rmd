@@ -1,0 +1,153 @@
+---
+title: "Some tests for time-serieses in rasterStacks"
+author: "Tuomas Rajala"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ConMK}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.width=8, fig.width=4, 
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+---
+
+```{r, include=!FALSE, message=FALSE}
+library(ConMK)
+```
+
+# Introduction
+This vignette demonstrates the features of the the package `ConMK`. The main reason for writing the package was to apply the time-series trend testing methodology introduced by Neetti and Eastman (2011). Particularly, we wanted to calculate the test p-values on large `rasterStack`-objects in which the value-vector of each cell (pixel) represented a timeseries. 
+
+## Example data
+Let's generate an example `rasterStack` with timeserieses in each pixel:
+
+```{r}
+r0 <- raster(resolution = c(3,3))
+n <- 10
+set.seed(1)
+xs <- stack(lapply(1:n, function(...)  setValues(r0, rnorm(length(r0)))  )) # just noise
+# add a trend to some of them
+has_trend <- distanceFromPoints(r0, cbind(0,0)) < 2e6
+has_trend_k <- which(has_trend[])
+xs[has_trend_k] <- t( t(xs[has_trend_k]) + (1:n) * 0.3)
+
+# Add some missing values
+xs[ sample(length(xs), 100) ] <- NA
+
+# Check
+spplot(xs, c(1,3,6,10))
+```
+
+```{r}
+# and just some 1D examples
+set.seed(1)
+ys <- xs[][c(1, sample(has_trend_k, 1)), ]
+plot(ys[1,], type = "l", ylim = c(-1,1)*5,  ann = FALSE)
+lines(ys[2,], col = 2 )
+```
+
+Here the second series, in red, has a trend. 
+
+# Testing for a trend
+
+## Stacks that fit in memory
+
+The Mann-Kendall trend test is implemented in many `R`-packages. We can do this here for the time series values simply by
+
+```{r}
+print( mann_kendall( ys[1,] , calc_slope = FALSE) )
+print( mann_kendall( ys[2,] ) )
+```
+
+By default the *Theil-Sen slope* estimate is also calculated (estimate ~ 0.3). 
+
+To do this for each cell in `rasterStack`, one could use the `raster::calc`-function on each cell
+```{r}
+if(0) # not run
+  mk.s1 <- calc(xs, function(v,...) unlist(mann_kendall(v, ...)) )
+```
+but this his the disadvantage that since `raster` stores data in row-col-layer order, large `calc`-operations will take place in chuncks that do not represent the time serieses. 
+
+To be sure we operate on each time series properly, we have to load the data in memory (or store it differently; we assume default behaviour). The next section discusses the case when the data values do not fit in the system memory, but for now let us assume they do. The package provides a c-code based implementation of the Mann-Kendall test, accessed with the call
+
+```{r, fig.width=9, fig.height=2}
+mks <- mann_kendall_stack(xs, calc_slope = TRUE)
+
+mks$p.05 <- mks$p < 0.05
+
+plot(mks, c("S", "p", "p.05"), nc = 3)
+```
+
+Note that now the slope is not calculated by default. Additionally, at the time of writing the function will not calculate the confidence interval for the slope even if requested. 
+
+Neeti and Eastman (2011) idea was to average the Mann-Kendall test statistic in a 3x3 window to avoid spurious false positives due to noise in the series (e.g. clouds in satellite image series). The idea is that neighbouring pixels should develop similarly in time, so smoothing should remove some of the anomalies. To account for the averaging, the variance of the test statistic requires correction that depends on all local cross-correlations. The c-code has an implementation of this: 
+
+```{r, fig.width=9, fig.height=2}
+mks2 <- mann_kendall_stack(xs, neighbourhood = 2)
+
+mks2$p.05 <- mks2$p < 0.05
+
+plot(mks2, c("S", "p", "p.05"), nc = 3)
+```
+
+## Accounting for serial correlation
+Potential auto-correlation/serial correlation in a series can lead to high false positive rate of the Mann-Kendall test. To counter this, one can apply a whitening procedure which assumes an AR(1) process noise and possibly a linear trend, and eliminates the AR(1)-noise:
+
+```{r}
+# generate a series with AR noise 
+set.seed(12)
+y2 <- c( arima.sim(list(ar=0.4), n=15) ) # + 1:n * 0.3
+z <- wang_swail_prewhiten_1d(y2) # first data is lost
+plot(y2, ylim = c(-1,1)*5, type="l")
+lines(2:length(y2), z$W, col=3) # not much happend as there was no cor
+
+do.call(rbind, lapply(list(y2,z$W), mann_kendall) )
+```
+
+```{r, fig.width=9, fig.height=2}
+xsw <- wang_swail_prewhiten_stack(xs)
+mkw <- mann_kendall_stack(xsw[[-1]]) # remember to drop the first layer!
+
+mkw$p.05 <- mkw$p < 0.05
+
+plot(mkw, c("S", "p", "p.05"), nc = 3)
+```
+
+
+This approach might drop the false positive rate, but also the power. In addition, one time point is lost due to how the method works, by changing from data series to its 1st differences.
+
+*Comparison:*
+
+```{r}
+rates <- function(p) c(TP = mean(p[which(has_trend[])], na.rm=TRUE), 
+                       FP = mean(p[which(!has_trend[])], na.rm=TRUE))
+
+tab <- rbind(orig    = rates(mks$p   <.05),
+             smoothed = rates(mks2$p <.05),
+             whitened = rates(mkw$p  <.05))
+
+print(tab)
+```
+
+In this instance the whitening actually increases the false positive rate. 
+
+
+## Multiple testing correction
+The discussion of the issue of testing millions of pixels simultaneously is beyond this document. A wrapper for classical p-value corrections is provided in the package:
+
+```{r, fig.width=9, fig.height=2}
+padj <-  p.adjust_raster(mks$p, method = c("none",  "holm", "fdr"))
+padj
+```
+
+Might not work (like here, p-values all go to near 1) as the corrections are not designed for these many tests. False discovery rate based are more likely to work than family-wise error rate based corrections.
+
+
+
+# Large rasterStack calculations

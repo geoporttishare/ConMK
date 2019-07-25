@@ -4,14 +4,19 @@
 \alias{mann_kendall}
 \title{Mann-Kendall Trend Test}
 \usage{
-mann_kendall(x, ..., est_beta = TRUE, check = TRUE)
+mann_kendall(x, ..., est_beta = TRUE, calc_slope = est_beta,
+  check = TRUE)
 }
 \arguments{
 \item{x}{Time series, either a vector of values or n x 2 matrix of value,time pairs}
 
-\item{est_beta}{Estimate linear coefficient as well?}
+\item{...}{ignored}
 
-\item{check}{check the data. If you give nx2 matrix then this TRUE saves time.}
+\item{est_beta}{calc_slope (legacy)}
+
+\item{calc_slope}{Estimate linear coefficient as well?}
+
+\item{check}{check the data. If you give nx2 matrix then this FALSE saves time.}
 }
 \description{
 1D. Assuming time

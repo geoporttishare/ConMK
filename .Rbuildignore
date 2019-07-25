@@ -1,3 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^test_stack.*rd.*
+README.md
+todo.txt
+^tests

@@ -194,6 +194,45 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// c_stack_covariance_sparse_UT
+List c_stack_covariance_sparse_UT(NumericMatrix x, int nrow, int neighbourhood);
+RcppExport SEXP _ConMK_c_stack_covariance_sparse_UT(SEXP xSEXP, SEXP nrowSEXP, SEXP neighbourhoodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< int >::type neighbourhood(neighbourhoodSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_stack_covariance_sparse_UT(x, nrow, neighbourhood));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_stack_covariance_sparse
+List c_stack_covariance_sparse(NumericMatrix x, int nrow, int neighbourhood);
+RcppExport SEXP _ConMK_c_stack_covariance_sparse(SEXP xSEXP, SEXP nrowSEXP, SEXP neighbourhoodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< int >::type neighbourhood(neighbourhoodSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_stack_covariance_sparse(x, nrow, neighbourhood));
+    return rcpp_result_gen;
+END_RCPP
+}
+// c_stack_covariance
+List c_stack_covariance(NumericMatrix x, int nrow, int neighbourhood);
+RcppExport SEXP _ConMK_c_stack_covariance(SEXP xSEXP, SEXP nrowSEXP, SEXP neighbourhoodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nrow(nrowSEXP);
+    Rcpp::traits::input_parameter< int >::type neighbourhood(neighbourhoodSEXP);
+    rcpp_result_gen = Rcpp::wrap(c_stack_covariance(x, nrow, neighbourhood));
+    return rcpp_result_gen;
+END_RCPP
+}
 // c_theil_sen_vector
 NumericVector c_theil_sen_vector(NumericVector x, NumericVector t);
 RcppExport SEXP _ConMK_c_theil_sen_vector(SEXP xSEXP, SEXP tSEXP) {
@@ -238,6 +277,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_ConMK_neighbour_cells_rook_col_row", (DL_FUNC) &_ConMK_neighbour_cells_rook_col_row, 3},
     {"_ConMK_forward_neighbour_cells_rook_row_col", (DL_FUNC) &_ConMK_forward_neighbour_cells_rook_row_col, 3},
     {"_ConMK_forward_neighbour_cells_rook_col_row", (DL_FUNC) &_ConMK_forward_neighbour_cells_rook_col_row, 3},
+    {"_ConMK_c_stack_covariance_sparse_UT", (DL_FUNC) &_ConMK_c_stack_covariance_sparse_UT, 3},
+    {"_ConMK_c_stack_covariance_sparse", (DL_FUNC) &_ConMK_c_stack_covariance_sparse, 3},
+    {"_ConMK_c_stack_covariance", (DL_FUNC) &_ConMK_c_stack_covariance, 3},
     {"_ConMK_c_theil_sen_vector", (DL_FUNC) &_ConMK_c_theil_sen_vector, 2},
     {"_ConMK_c_wang_swail_prewithen_1d", (DL_FUNC) &_ConMK_c_wang_swail_prewithen_1d, 5},
     {NULL, NULL, 0}

@@ -8,7 +8,9 @@ check_x(x, ...)
 }
 \arguments{
 \item{x}{time series object}
+
+\item{...}{ignored}
 }
 \description{
-Check 1D timeseries
+For internal use.
 }

@@ -1,5 +1,5 @@
 ---
-title: "Contextual MK example 1"
+title: "Contextual Mann-Kendall example"
 author: "Tuomas Rajala"
 date: "`r Sys.Date()`"
 output:
@@ -79,11 +79,6 @@ par(mfrow = c(4,4), mar = c(2,2,4,4))
 for(n in names(stacks)) for(i in 1:4) {plot(stacks[[n]], i*5,main="");title(main = paste0(n, "   t=", i*5))}
 ```
 
-* osa yksi
-* ossa kasi
-* kolmas
-
-
 The idea of the contextual MK is that if a trend is present somewhere it should be present also nearby. This amounts to spatial-smoothing at some stage of the testing. Here is the significant cells without and with temporal correlation present:
 
 ```{r, fig.width=9, fig.height=4}
@@ -113,8 +108,8 @@ The idea would be to smoothen at some point of the analysis so that only the one
 First step is to get rid of the AR-noise by "whitening" it (Wang & Swail 2001).
 
 ```{r, fig.width=5,fig.height=3}
-sw <- wang_swail_prewhiten_stack(stacks$artrend, useC=TRUE)
-stacks$artrend_w <- stack(sw[[-1]]) # drop the first NA layer lost due to whitening
+sw <- wang_swail_prewhiten_stack(stacks$artrend)
+stacks$artrend_w <- stack(sw[[-1]]) # drop the first layer, it is all NA due to whitening
 mkaw <- stackApply(stacks$artrend_w, 1, fun)
 par(mar=c(2,2,2,2))
 plot_isit(mkaw < 0.05, legend=F, main ="artrend, whitened")

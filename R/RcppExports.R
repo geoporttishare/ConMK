@@ -61,6 +61,18 @@ forward_neighbour_cells_rook_col_row <- function(i, nrow, ncol) {
     .Call('_ConMK_forward_neighbour_cells_rook_col_row', PACKAGE = 'ConMK', i, nrow, ncol)
 }
 
+c_stack_covariance_sparse_UT <- function(x, nrow, neighbourhood = 2L) {
+    .Call('_ConMK_c_stack_covariance_sparse_UT', PACKAGE = 'ConMK', x, nrow, neighbourhood)
+}
+
+c_stack_covariance_sparse <- function(x, nrow, neighbourhood = 2L) {
+    .Call('_ConMK_c_stack_covariance_sparse', PACKAGE = 'ConMK', x, nrow, neighbourhood)
+}
+
+c_stack_covariance <- function(x, nrow, neighbourhood = 2L) {
+    .Call('_ConMK_c_stack_covariance', PACKAGE = 'ConMK', x, nrow, neighbourhood)
+}
+
 c_theil_sen_vector <- function(x, t) {
     .Call('_ConMK_c_theil_sen_vector', PACKAGE = 'ConMK', x, t)
 }

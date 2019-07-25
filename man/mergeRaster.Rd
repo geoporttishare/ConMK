@@ -9,6 +9,8 @@ mergeRaster(x, ..., fun = NULL)
 \arguments{
 \item{x}{list of rasters}
 
+\item{...}{ignored}
+
 \item{fun}{function to apply on the overlapping regions}
 }
 \description{

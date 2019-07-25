@@ -5,8 +5,10 @@
 #'
 #' @param x Vector of values
 #' @param t Optional vector of times, numerical
+#' @param ... ignored
 #'
 #' @export
+#' @importFrom stats median
 #' @useDynLib ConMK
 
 theil_sen <- function(x, t = 1:length(x), ...) {
