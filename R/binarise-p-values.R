@@ -14,9 +14,9 @@
 
 p.adjust_raster <- function(x, method = c("none", "fdr")) {
   #
+  #e <- calc(x, p.adjust, method = method)
   pv <- x[]
   ok <- !is.na(pv)
-  e <- calc(x, p.adjust, method = method)
   o <- lapply(method, function(m) {
                 r <- raster(x)
                 v <- p.adjust(pv[ok], method = m)

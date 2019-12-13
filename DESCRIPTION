@@ -1,7 +1,7 @@
 Package: ConMK
 Type: Package
 Title: Contextual Mann-Kendall
-Version: 0.6
+Version: 0.7
 Author: Tuomas Rajala
 Maintainer: Tuomas Rajala <tuomas.rajala@luke.fi>
 Description: Cell-wise and Contextual Mann Kendall trend tests for rasterStacks.

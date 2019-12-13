@@ -27,11 +27,12 @@ exs1 <- stacks$trend[600][1,]
 plot_isit <- function(x, ..., p, a  = 0.05) {
   if(missing(x)) {
     # multiple testing correction: 
-    pv <- sort(values(p))
-    e <- a/( length(pv) - 1:length(pv) + 1 )
-    th <- pv[ 1+sum(!(pv>e)) ]
+    #pv <- sort(values(p))
+    #e <- a/( length(pv) - 1:length(pv) + 1 )
+    #th <- pv[ 1+sum(!(pv>e)) ]
     #th <- quantile(pv, a, na.rm=TRUE)
-    x <- p < th
+    #x <- p < th
+    x <- p.adjust_raster(p, method = "fdr") < a
   }
   plot(x, ..., zlim = c(0,1), axes=F)
   zz <- na.omit(cbind(values(hastrend) != 0, values(x) != 0))
@@ -142,7 +143,7 @@ for(n in names(cmk)){
 
 ```
 
-(Correction: Holm-Bonferroni)
+(Correction: FDR)
 
 #<!-- 
 
