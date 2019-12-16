@@ -34,7 +34,7 @@ to include vignettes.
 The packages comes with a set of synthetic `rasterStack` objects:
 ```
 > data("test_stacks2")
-> r <- test_stacks2$trend
+> x <- test_stacks2$trend
 > r <- contextual_mann_kendall(x)
 > r
 class      : RasterStack 
