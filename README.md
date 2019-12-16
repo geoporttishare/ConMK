@@ -48,6 +48,10 @@ max values :      108.4444,      545.6284,        1.0000
 > plot( p.adjust_raster(r$p) < 0.05 )
 ```
 
-See the vignettes for further examples,
+See the vignette for further examples,
+
+```
+vignette("all-functions", package="ConMK")
+```
 
 
