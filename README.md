@@ -24,8 +24,10 @@ As usual,
 
 ```
 library(devtools)
-install_github("antiphon/ConMK")
+install_github("antiphon/ConMK", build_vignettes = TRUE)
 ```
+
+to include vignettes.
 
 ## Usage
 
@@ -51,7 +53,7 @@ max values :      108.4444,      545.6284,        1.0000
 See the vignette for further examples,
 
 ```
-vignette("all-functions", package="ConMK")
+vignette(package="ConMK")
 ```
 
 
