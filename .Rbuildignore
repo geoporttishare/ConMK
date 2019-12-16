@@ -4,3 +4,5 @@
 README.md
 todo.txt
 ^tests
+^doc$
+^Meta$

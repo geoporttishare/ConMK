@@ -1,10 +1,10 @@
 ---
-title: "Some tests for time-serieses in rasterStacks"
+title: "ConMK: Examples of functionality"
 author: "Tuomas Rajala"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ConMK}
+  %\VignetteIndexEntry{ConMK-examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -150,4 +150,26 @@ Might not work (like here, p-values all go to near 1) as the corrections are not
 
 
 
-# Large rasterStack calculations
+# Large rasterStack calculations using `snow`
+
+If a large stack is to be analysed, it can be useful to 1) split the raster spatially to pieces 2) compute the statistics in parallel, locally or on a grid, for each piece 3) merge the resulting pieces. Here is an example of such run using the `snow` cluster-computation package via the `raster` package:
+
+```{r}
+# compute this
+res0 <- mann_kendall_stack(xs, neighbourhood = 2)
+# in pieces
+library(snow)
+nodes <- 4 # demo
+beginCluster(n = nodes)  # from 'raster' package
+res <- split_calc_wrapper(xs, nx = 2, ny = 3, buffer = c(1, 1), 
+                          fun = mann_kendall_stack, neighbourhood = 2)
+endCluster() 
+# should be identical
+print( all.equal(res$result, res0) )
+```
+
+These parameters 1) split the extent of stack `xs` into a $3\times 2$ rectangular tesselation with 1 cell buffer both in x and y directions 2) applies `fun` to each sub-extent stack 3) merges the sub-results so that the end result has the original extent. The merging will discard the buffer zone cells (except at original edges). 
+
+The reason for using this special wrapper as opposed to `clusterR` from `raster` is that parallelised/blocked code in `raster` reads the blocks in row-col-layer order (as they are stored) which clearly would destroy the time-series information. In addition, the buffer is needed when cell-neighbourhoods affect the calculations. The downside is that each subset rasterStack must be fully read into memory before the calculations on it can be carried out.
+
+See the package `snow` documentation for further details on grid-computing.

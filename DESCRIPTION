@@ -8,8 +8,12 @@ Description: Cell-wise and Contextual Mann Kendall trend tests for rasterStacks.
 License: GPL-3
 Encoding: UTF-8
 Depends: raster, Matrix, progress, stats, methods
-Suggests: snow
+Suggests: 
+    snow,
+    knitr,
+    rmarkdown
 LazyData: true
 Imports: Rcpp (>= 1.0.0)
 LinkingTo: Rcpp
 RoxygenNote: 6.1.1
+VignetteBuilder: knitr
