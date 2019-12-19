@@ -1,3 +1,5 @@
+<img src="https://github.com/geoportti/Logos/blob/master/geoportti_logo_300px.png">
+
 # R-package: Contextual Mann-Kendall trend test for rasterStacks
 
 Compute a Mann-Kendall trend-test in each cell of a given `rasterStack` where layers are considered as observation times.
@@ -56,4 +58,6 @@ See the vignette for further examples,
 vignette(package="ConMK")
 ```
 
-
+## Usage and Citing
+When using GeoCubes, the following citing should be mentioned:
+"We made use of geospatial data/instructions/computing resources provided by the Open Geospatial Information Infrastructure for Research (oGIIR, urn:nbn:fi:research-infras-2016072513) funded by the Academy of Finland."
